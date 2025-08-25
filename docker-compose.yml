@@ -67,6 +67,27 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U snuser -d sndb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  sn-user:
+    build:
+      context: sn-user # Refers to the directory containing your Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
+      SPRING_DATASOURCE_USERNAME: snuser
+      SPRING_DATASOURCE_PASSWORD: tesT123s4n
+    networks:
+      - backend
 
 
   keycloak:
@@ -79,6 +100,8 @@ services:
       - "8080:8080"
     volumes:
       - keycloak_data:/opt/keycloak/data
+    networks:
+      - backend
 
 volumes:
   postgres_data:
