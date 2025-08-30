@@ -30,7 +30,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")           // все пути
-                        .allowedOrigins("http://localhost:5173/") // откуда разрешаем
+                        .allowedOrigins("http://localhost:5173") // откуда разрешаем
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
