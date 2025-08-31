@@ -16,12 +16,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthConverter jwtAuthConverter;
-
-    public SecurityConfig(JwtAuthConverter jwtAuthConverter) {
-        this.jwtAuthConverter = jwtAuthConverter;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthConverter jwtAuthConverter) throws Exception {
         http
