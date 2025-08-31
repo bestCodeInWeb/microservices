@@ -18,6 +18,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
+        System.out.println("jwt = " + jwt);
         Collection<GrantedAuthority> roles = extractAuthorities(jwt);
         return new JwtAuthenticationToken(jwt, roles);
     }
@@ -27,6 +28,8 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         if (roles == null) {
             return List.of();
         }
+
+        System.out.println("roles = " + roles);
         return roles.stream()
                 .map(role -> "ROLE_" + role.toUpperCase())
                 .map(SimpleGrantedAuthority::new)
