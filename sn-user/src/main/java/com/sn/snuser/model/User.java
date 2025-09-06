@@ -2,7 +2,7 @@ package com.sn.snuser.model;
 
 import com.sn.snuser.model.embeddable.Address;
 import com.sn.snuser.model.embeddable.Contacts;
-import com.sn.snuser.model.embeddable.Settings;
+import com.sn.snuser.model.embeddable.ProfileSettings;
 import com.sn.snuser.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "users")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -47,9 +46,9 @@ public class User {
     private Contacts contacts;
 
     @Embedded
-    private Settings settings;
+    private ProfileSettings profileSettings;
 
-    private String avatar;
+    private String avatar; //todo move to profile entity
 
     private String background;
 }

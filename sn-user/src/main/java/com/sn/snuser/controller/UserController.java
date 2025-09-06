@@ -1,12 +1,11 @@
 package com.sn.snuser.controller;
 
 import com.sn.snuser.dto.UserDto;
-import com.sn.snuser.model.User;
+import com.sn.snuser.mapper.UserMapper;
 import com.sn.snuser.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,26 +20,16 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> findAll() {
-        return userService.findAll().stream()
-                .map(user -> UserDto.builder().build())
-                .collect(toList());
+        return userService.findAll().stream().map(UserMapper.INSTANCE::toDto).collect(toList());
+    }
+
+    @GetMapping("/{userId}")
+    public UserDto getUserInfo(@PathVariable String userId) {
+        return userService.findById(userId).map(UserMapper.INSTANCE::toDto).orElseThrow(); //todo
     }
 
     @PostMapping
     public UserDto addUser(@RequestBody UserDto userDto) {
-        User newUser  = User.builder().id("").build(); //todo
-        User saved = userService.save(newUser);
-        return UserDto.builder()
-                .id(saved.getId())
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .gender(saved.getGender())
-                .country(saved.getAddress().getCountry())
-                .city(saved.getAddress().getCity())
-                .street(saved.getAddress().getStreet())
-                .street(userDto.getStreet())
-                .build();
+        return UserMapper.INSTANCE.toDto(userService.save(UserMapper.INSTANCE.toEntity(userDto)));
     }
 }

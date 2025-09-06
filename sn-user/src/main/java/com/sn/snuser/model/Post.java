@@ -9,7 +9,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "post")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor

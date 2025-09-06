@@ -1,15 +1,11 @@
 package com.sn.snuser.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity(name = "message")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +25,12 @@ public class Message {
     @ManyToOne
     private User creator;
 
+    @ManyToOne
+    private Chat chat;
+
     private String content;
+
+    private boolean read;
+
+    private boolean deleted;
 }

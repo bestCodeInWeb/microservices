@@ -1,3 +1,5 @@
 rootProject.name = 'microservices'
 
 includeBuild 'sn-user'
+
+include 'keycloak-rabbitmq'

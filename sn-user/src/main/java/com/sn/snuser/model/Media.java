@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "media")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,13 +16,14 @@ public class Media {
     @EqualsAndHashCode.Include
     private String id;
 
-    @Column(name = "media_uri", nullable = false)
-    private String mediaUri;
+    @Column(name = "uri", nullable = false)
+    private String uri;
 
     @Enumerated(EnumType.STRING)
     private MediaType type;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "owner_type")
     private MediaOwnerType ownerType;
 
     @Column(name = "owner_id", nullable = false)

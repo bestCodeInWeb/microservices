@@ -8,7 +8,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class Settings {
+public class ProfileSettings {
     @Column(name = "is_private")
     private boolean isPrivate;
 }

@@ -1,11 +1,14 @@
 package com.sn.snuser.controller;
 
 import com.sn.snuser.dto.PostDto;
+import com.sn.snuser.mapper.PostMapper;
 import com.sn.snuser.model.Post;
 import com.sn.snuser.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/posts")
@@ -17,20 +20,13 @@ public class PostController {
     }
 
     @PostMapping
-    public Post addPost(@RequestBody PostDto postDto) {
-        System.out.println("add POst");
-        return postService.save(postDto);
-    }
-
-    @GetMapping("/{id}")
-    public Post createRandomPost(@PathVariable String id) {
-        System.out.println("rcreate POst");
-        return postService.save(PostDto.builder().id(id).description("ds fds fds  ").content("dsf dsoi ").build());
+    public PostDto addPost(@RequestBody PostDto postDto) {
+        Post newPost = PostMapper.INSTANCE.toEntity(postDto);
+        return PostMapper.INSTANCE.toDto(postService.save(newPost));
     }
 
     @GetMapping
-    public List<Post> getPosts() {
-        System.out.println("get POsts");
-        return postService.findAll();
+    public List<PostDto> getPosts() {
+        return postService.findAll().stream().map(PostMapper.INSTANCE::toDto).collect(toList());
     }
 }

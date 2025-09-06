@@ -1,6 +1,5 @@
 package com.sn.snuser.dto;
 
-import com.sn.snuser.model.enums.Gender;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,13 +8,10 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class MessageDto {
     private String id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String firstName;
-    private String lastName;
-    private Gender gender;
-    private AddressDto address;
-    private ContactsDto contacts;
+    private UserDto creator;
+    private String content;
 }

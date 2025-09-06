@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "comment")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +22,7 @@ public class Comment {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User creator;
 
     private String text;

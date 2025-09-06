@@ -17,14 +17,12 @@ public class PostServicePg implements PostService {
     }
 
     @Override
-    public Post save(PostDto postDto) {
-        Post post = Post.builder().id(postDto.getId()).build();
-
+    public Post save(Post post) {
         return postRepository.save(post);
     }
 
     @Override
     public List<Post> findAll() {
-        return postRepository.findAll();
+        return postRepository.findAll(); //todo ordered by
     }
 }
