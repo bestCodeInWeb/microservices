@@ -22,7 +22,7 @@ public class Message {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User creator;
 
     @ManyToOne

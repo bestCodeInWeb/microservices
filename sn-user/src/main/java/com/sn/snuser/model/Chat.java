@@ -20,12 +20,12 @@ public class Chat {
     private String id;
 
     @ManyToMany
-    @JoinTable(name = "chat_user", // промежуточная таблица
-            joinColumns = @JoinColumn(name = "chat_id"), // FK на Chat
-            inverseJoinColumns = @JoinColumn(name = "user_id") // FK на User
+    @JoinTable(name = "chat_user",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "chat_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Message>  messages = new ArrayList<>();
 }
