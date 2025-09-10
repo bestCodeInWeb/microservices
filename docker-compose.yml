@@ -20,7 +20,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -33,6 +32,41 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - backend
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    build:
+      context: ./sn-keycloak-rabbitmq-provider
+      dockerfile: Dockerfile
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/sndb
+      KC_DB_USERNAME: snuser
+      KC_DB_PASSWORD: tesT123s4n
+      KC_DB_SCHEMA: keycloak
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HOSTNAME_STRICT_HTTPS: 'false'
+    command:
+      - "start-dev"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend
 
   sn-user:
     build:
@@ -40,37 +74,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+      - "5005:5005" #debug port
     depends_on:
-      rabbitmq:
-        condition: service_healthy
       postgres:
         condition: service_healthy
       keycloak:
-        condition: service_started
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
       SPRING_DATASOURCE_USERNAME: snuser
       SPRING_DATASOURCE_PASSWORD: tesT123s4n
-    networks:
-      - backend
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.0.0
-    command: start-dev
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8080:8080"
-    volumes:
-      - keycloak_data:/opt/keycloak/data
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     networks:
       - backend
 
 
 volumes:
   postgres_data:
-  keycloak_data:
   rabbitmq_data:
 
 networks:
