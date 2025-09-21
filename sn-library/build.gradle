@@ -1,0 +1,42 @@
+plugins {
+    id 'java-library'
+    id "com.github.davidmc24.gradle.plugin.avro" version '1.8.0'
+    id "maven-publish"
+}
+
+group = 'com.sn'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal() // публикация в локальный Maven (~/.m2/repository)
+    }
+}
+
+dependencies {
+    implementation 'org.apache.avro:avro:1.12.0'
+    compileOnly "org.keycloak:keycloak-core:26.3.3"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir(layout.buildDirectory.dir("generated-main-avro-java").get().asFile)
+        }
+    }
+}
