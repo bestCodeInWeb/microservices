@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserEventListener {
+
     private final UserEventService userEventService;
 
     public UserEventListener(UserEventService userEventService) {
