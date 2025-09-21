@@ -13,6 +13,7 @@ public class UserDto {
     private String id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String username;
     private String firstName;
     private String lastName;
     private Gender gender;

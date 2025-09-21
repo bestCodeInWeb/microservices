@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "UserEvent",
+  "namespace": "com.sn.events",
+  "fields": [
+    {"name": "operationType", "type": "string"},
+    {"name": "user", "type": "com.sn.events.User"},
+    {"name": "timestamp", "type": "long"}
+  ]
+}

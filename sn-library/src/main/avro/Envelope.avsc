@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "Envelope",
+  "namespace": "com.sn.events",
+  "fields": [
+    {"name": "eventId", "type": "string"},
+    {"name": "eventType", "type": "string"},
+    {"name": "timestamp", "type": "long"},
+    {"name": "payload", "type": "bytes"}
+  ]
+}

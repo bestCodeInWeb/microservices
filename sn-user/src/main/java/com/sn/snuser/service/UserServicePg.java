@@ -29,4 +29,9 @@ public class UserServicePg implements UserService {
     public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public void deleteById(String userId) {
+        userRepository.deleteById(userId);
+    }
 }

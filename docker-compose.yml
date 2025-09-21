@@ -54,6 +54,7 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: user
       RABBITMQ_PASS: password
+      KC_HEALTH_ENABLED: true
       KC_HOSTNAME_STRICT: 'false'
       KC_HOSTNAME_STRICT_HTTPS: 'false'
     command:
@@ -67,17 +68,12 @@ services:
         condition: service_healthy
     networks:
       - backend
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
-      interval: 10s
-      retries: 10
-      start_period: 20s
-      timeout: 5s
 
   sn-user:
     build:
-      context: sn-user # Refers to the directory containing your Dockerfile
-      dockerfile: Dockerfile
+      context: . # Refers to the directory containing your Dockerfile-sn-user
+      dockerfile: Dockerfile-sn-user
+    restart: on-failure
     ports:
       - "8081:8081"
       - "5005:5005" #debug port
@@ -85,7 +81,7 @@ services:
       postgres:
         condition: service_healthy
       keycloak:
-        condition: service_healthy
+        condition: service_started
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
       SPRING_DATASOURCE_USERNAME: snuser

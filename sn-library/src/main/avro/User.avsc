@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "User",
+  "namespace": "com.sn.events",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "username", "type": "string"},
+    {"name": "firstName", "type": ["null","string"], "default": null},
+    {"name": "lastName", "type": ["null","string"], "default": null},
+    {"name": "email", "type": "string"}
+  ]
+}

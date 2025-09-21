@@ -5,6 +5,7 @@ CREATE TABLE users
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
 
+    user_name VARCHAR(255),
     first_name VARCHAR(255),
     last_name  VARCHAR(255),
     gender     VARCHAR(50),

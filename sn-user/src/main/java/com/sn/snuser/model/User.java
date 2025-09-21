@@ -27,6 +27,9 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "user_name", nullable = false)
+    private String userName;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
