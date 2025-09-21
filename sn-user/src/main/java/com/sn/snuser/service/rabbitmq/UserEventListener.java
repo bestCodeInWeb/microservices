@@ -20,6 +20,7 @@ public class UserEventListener {
             case "UPDATE" -> userEventService.updateUser(event.getUser(), event.getTimestamp());
             case "DELETE" -> userEventService.deleteUser(event.getUser(), event.getTimestamp());
             case "ACTION" -> userEventService.action(event.getUser(), event.getTimestamp());
+            default -> System.out.println("Unknown event");
         }
     }
 }

@@ -23,6 +23,7 @@ public class UserEventService {
 
     public void createUser(com.sn.events.User user, long timestamp) {
         //todo use timestamd or remove it
+        System.out.println("user created - " + user.getUsername());
         User snUser = new User(
                 user.getId(), now(), now(),
                 user.getUsername(), user.getFirstName(), user.getLastName(),
@@ -32,16 +33,20 @@ public class UserEventService {
 
     public void updateUser(com.sn.events.User user, long timestamp) {
         //todo use timestamd or remove it
+        System.out.println("user update - " + user.getUsername());
+
         userService.findById(user.getId()).map(snUser -> {
             snUser.setUpdatedAt(now());
             snUser.setFirstName(user.getFirstName());
             snUser.setLastName(user.getLastName());
 
             return snUser;
-        }).orElseThrow();
+        }).orElse(null); //todo
     }
 
     public void deleteUser(com.sn.events.User user, long timestamp) {
+        System.out.println("delete user: " + user.getUsername());
+
         userService.deleteById(user.getId());
     }
 
