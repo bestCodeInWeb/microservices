@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserEventListener {
-
+//todo add logs everywhere
     private final UserEventService userEventService;
 
     public UserEventListener(UserEventService userEventService) {

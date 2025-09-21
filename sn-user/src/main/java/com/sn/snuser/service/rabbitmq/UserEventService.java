@@ -8,6 +8,8 @@ import com.sn.snuser.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.sn.snuser.model.enums.Gender.MALE;
 import static java.time.LocalDateTime.now;
 
@@ -32,21 +34,25 @@ public class UserEventService {
     }
 
     public void updateUser(com.sn.events.User user, long timestamp) {
-        //todo use timestamd or remove it
-        System.out.println("user update - " + user.getUsername());
+        Optional<User> existingUser = userService.findById(user.getId());
+        User snUser;
 
-        userService.findById(user.getId()).map(snUser -> {
+        if(existingUser.isPresent()) {
+            snUser = existingUser.get();
             snUser.setUpdatedAt(now());
             snUser.setFirstName(user.getFirstName());
             snUser.setLastName(user.getLastName());
-
-            return snUser;
-        }).orElse(null); //todo
+        } else {
+            snUser = new User(
+                    user.getId(), now(), now(),
+                    user.getUsername(), user.getFirstName(), user.getLastName(),
+                    MALE, null, new Address(), new Contacts(), new ProfileSettings(), null, null
+            );
+            userService.save(snUser);
+        }
     }
 
     public void deleteUser(com.sn.events.User user, long timestamp) {
-        System.out.println("delete user: " + user.getUsername());
-
         userService.deleteById(user.getId());
     }
 

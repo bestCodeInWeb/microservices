@@ -41,6 +41,8 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
     public void onEvent(Event event) {
         try {
             String json = objectMapper.writeValueAsString(event);
+            System.out.println("event");
+            System.out.println(json);
             channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null, json.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,20 +52,18 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
     @Override
     public void onEvent(AdminEvent adminEvent, boolean includeRepresentation) {
         try {
-            User user = null;
+            User user = new User();
+            user.setId(extractUserId(adminEvent));
 
             if (includeRepresentation && adminEvent.getRepresentation() != null) {
                 try {
                     JsonNode node = objectMapper.readTree(adminEvent.getRepresentation());
-                    user = new User(
-                            extractUserId(adminEvent),
-                            node.path("username").asText(null),
-                            node.path("firstName").asText(null),
-                            node.path("lastName").asText(null),
-                            node.path("email").asText(null)
-                    );
+                    user.setUsername(node.path("username").asText(null));
+                    user.setFirstName(node.path("firstName").asText(null));
+                    user.setLastName(node.path("lastName").asText(null));
+                    user.setEmail(node.path("email").asText(null));
                 } catch (Exception e) {
-                    user = null;
+                    System.out.println(e);
                 }
             }
 
