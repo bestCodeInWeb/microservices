@@ -2,6 +2,7 @@ package com.sn.snuser.repository;
 
 import com.sn.snuser.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface PostRepository extends JpaRepository<Post, String> {
+public interface PostRepository extends JpaRepository<Post, String>, JpaSpecificationExecutor<Post> {
 }

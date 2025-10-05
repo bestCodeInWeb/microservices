@@ -51,7 +51,7 @@ public class User {
     @Embedded
     private ProfileSettings profileSettings;
 
-    private String avatar; //todo move to profile entity
+    private String avatar; //todo move to profile entity + bio
 
     private String background;
 }

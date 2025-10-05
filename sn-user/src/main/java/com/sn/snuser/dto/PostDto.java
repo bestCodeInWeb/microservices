@@ -3,6 +3,8 @@ package com.sn.snuser.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,4 +16,5 @@ public class PostDto {
     private LocalDateTime updatedAt;
     private UserDto creator;
     private String text;
+    private Set<String> hashtags;
 }

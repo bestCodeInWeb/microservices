@@ -1,12 +1,12 @@
 package com.sn.snuser.service;
 
-import com.sn.snuser.dto.PostDto;
 import com.sn.snuser.model.Post;
 import com.sn.snuser.repository.PostRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Service
 public class PostServicePg implements PostService {
@@ -22,7 +22,13 @@ public class PostServicePg implements PostService {
     }
 
     @Override
-    public List<Post> findAll() {
-        return postRepository.findAll(); //todo ordered by
+    public List<Post> findAll(Map<String, String> queryParams) {
+        Specification<Post> specification = null;
+
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+
+        }
+
+        return postRepository.findAll(specification);
     }
 }

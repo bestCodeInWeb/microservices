@@ -32,4 +32,9 @@ public class UserController {
     public UserDto addUser(@RequestBody UserDto userDto) {
         return UserMapper.INSTANCE.toDto(userService.save(UserMapper.INSTANCE.toEntity(userDto)));
     }
+
+    @PutMapping("/{userId}")
+    public UserDto updateUser(@RequestBody UserDto userDto) {
+        return UserMapper.INSTANCE.toDto(userService.save(UserMapper.INSTANCE.toEntity(userDto)));
+    }
 }

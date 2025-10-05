@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "post")
 @Getter
@@ -26,4 +28,9 @@ public class Post {
     private User creator;
 
     private String text;
+
+    @ElementCollection
+    @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "hashtag")
+    private Set<String> hashtags = new HashSet<>();
 }
