@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class RabbitMqEventListenerProvider implements EventListenerProvider {
-    private static final String EXCHANGE_NAME = "keycloak.user.events";
+    private static final String EXCHANGE_NAME = "keycloak.events";
     private static final String ROUTING_KEY = "keycloak.event";
     private final Connection connection;
     private final Channel channel;

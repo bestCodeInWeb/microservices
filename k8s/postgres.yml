@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+type: Opaque
+stringData:
+  POSTGRES_USER: snuser
+  POSTGRES_PASSWORD: tesT123s4n
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  POSTGRES_DB: sndb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce # Означає: "Може бути підключений для читання/запису лише одним вузлом (node)"
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+            - secretRef:
+                name: postgres-secret
+          volumeMounts: # 👈 КРОК 2: Монтуємо його всередину контейнера
+            - name: postgres-storage # Ім'я має збігатися з тим, що в 'volumes'
+              mountPath: /var/lib/postgresql/data # Шлях з docker-compose.yml
+      volumes: # 👈 КРОК 1: Оголошуємо том для Pod'а
+        - name: postgres-storage # Ми вигадуємо це ім'я
+          persistentVolumeClaim:
+            claimName: postgres-pvc # Посилаємось на наш PVC
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

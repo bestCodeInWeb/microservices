@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sn-user-config
+data:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
+  JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-user-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-user
+  template:
+    metadata:
+      labels:
+        app: sn-user
+    spec:
+      containers:
+        - name: sn-user
+          image: sn-user:latest # 👈 Зберемо локально
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081 # 👈 Порт програми
+            - containerPort: 5005 # 👈 Порт для debug
+          envFrom:
+            - configMapRef:
+                name: sn-user-config
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sn-user
+spec:
+  selector:
+    app: sn-user
+  ports:
+    - name: api
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: debug
+      protocol: TCP
+      port: 5005
+      targetPort: 5005

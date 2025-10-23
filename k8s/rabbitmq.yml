@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq-secret
+stringData:
+  RABBITMQ_DEFAULT_USER: user
+  RABBITMQ_DEFAULT_PASS: password
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # 1 ГБ, як і для postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq # 👈 Новий "ярлик"
+  template:
+    metadata:
+      labels:
+        app: rabbitmq # 👈 Той самий "ярлик"
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672  # Порт брокера
+            - containerPort: 15672 # Порт UI
+          envFrom:
+            - secretRef:
+                name: rabbitmq-secret # 👈 Підключаємо наш Secret
+          volumeMounts:
+            - name: rabbitmq-storage
+              mountPath: /var/lib/rabbitmq # Шлях з docker-compose
+      volumes:
+        - name: rabbitmq-storage
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc # 👈 Підключаємо наш PVC
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq # 👈 Це ім'я буде використовувати Keycloak
+spec:
+  selector:
+    app: rabbitmq # 👈 Знаходить Pod'и з Deployment'а
+  ports:
+    - name: broker
+      protocol: TCP
+      port: 5672       # Інші сервіси стукають сюди
+      targetPort: 5672 # Трафік іде на порт контейнера
+    - name: management-ui
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
