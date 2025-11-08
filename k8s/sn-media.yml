@@ -1,0 +1,79 @@
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: sn-media-config
+#data:
+#  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
+#  MEDIA_STORAGE_PATH: /storage # Шлях до сховища всередині Pod
+#  JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+#---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: sn-media-pvc
+#spec:
+#  accessModes:
+#    - ReadWriteOnce # Може бути підключений для читання/запису лише одним вузлом
+#  resources:
+#    requests:
+#      storage: 1Gi # 1 ГБ для медіафайлів
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: sn-media-deployment
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: sn-media
+#  template:
+#    metadata:
+#      labels:
+#        app: sn-media
+#    spec:
+#      containers:
+#        - name: sn-media
+#          image: sn-media:latest # Використовуємо наш новий образ
+#          imagePullPolicy: IfNotPresent
+#          ports:
+#            - containerPort: 8082 # Порт програми
+#            - containerPort: 5005 # Порт для debug
+#          envFrom:
+#            - configMapRef:
+#                name: sn-media-config
+#          env:
+#            - name: SPRING_DATASOURCE_USERNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: postgres-secret
+#                  key: POSTGRES_USER
+#            - name: SPRING_DATASOURCE_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: postgres-secret
+#                  key: POSTGRES_PASSWORD
+#          volumeMounts: # 👈 Монтуємо сховище
+#            - name: media-storage
+#              mountPath: /storage # Шлях, який бачить додаток
+#      volumes: # 👈 Декларуємо volume
+#        - name: media-storage
+#          persistentVolumeClaim:
+#            claimName: sn-media-pvc # Посилаємось на наш PVC
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: sn-media
+#spec:
+#  selector:
+#    app: sn-media
+#  ports:
+#    - name: api
+#      protocol: TCP
+#      port: 8082
+#      targetPort: 8082
+#    - name: debug
+#      protocol: TCP
+#      port: 5005
+#      targetPort: 5005

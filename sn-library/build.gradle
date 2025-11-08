@@ -25,6 +25,10 @@ publishing {
 dependencies {
     implementation 'org.apache.avro:avro:1.12.0'
     compileOnly "org.keycloak:keycloak-core:26.3.3"
+
+    // --- Додано Lombok для DTO ---
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
 java {

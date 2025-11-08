@@ -91,10 +91,37 @@ services:
     networks:
       - backend
 
+  # --- Новий сервіс sn-media ---
+  sn-media:
+    build:
+      context: ./sn-media # Вказуємо на папку sn-media
+      dockerfile: Dockerfile-sn-media # Використовуємо новий Dockerfile
+    restart: on-failure
+    ports:
+      - "8082:8082" # Новий порт
+      - "5006:5005" # Новий debug порт, щоб не було конфлікту
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sndb
+      SPRING_DATASOURCE_USERNAME: snuser
+      SPRING_DATASOURCE_PASSWORD: tesT123s4n
+      # Конфігурація для зберігання файлів
+      MEDIA_STORAGE_PATH: /storage
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    volumes:
+      - media_storage:/storage # Монтуємо volume для зберігання файлів
+    networks:
+      - backend
 
 volumes:
   postgres_data:
   rabbitmq_data:
+  media_storage: # Створюємо новий volume для sn-media
 
 networks:
   backend:

@@ -1,0 +1,19 @@
+# Stage 1: Build the application
+FROM gradle:8.10-jdk17 AS build
+
+# Для sn-media не потрібна sn-library
+# WORKDIR /app/sn-library
+# COPY sn-library ./
+# RUN gradle publishToMavenLocal --no-daemon
+
+WORKDIR /app/sn-media
+COPY . .
+RUN gradle clean bootJar --no-daemon
+
+# Stage 2: Create the final image
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Djdk.disableLastUsageTracking=true -XX:MaxRAMPercentage=75.0"
+COPY --from=build /app/sn-media/build/libs/*.jar app.jar
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "app.jar"]

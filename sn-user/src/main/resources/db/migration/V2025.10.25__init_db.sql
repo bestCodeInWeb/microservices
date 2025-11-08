@@ -96,15 +96,6 @@ CREATE TABLE message
     CONSTRAINT fk_message_chat FOREIGN KEY (chat_id) REFERENCES chat (id)
 );
 
-CREATE TABLE media
-(
-    id         VARCHAR(36) PRIMARY KEY,
-    uri        VARCHAR(500) NOT NULL,
-    type       VARCHAR(50),
-    owner_type VARCHAR(50),
-    owner_id   VARCHAR(36)  NOT NULL
-);
-
 CREATE TABLE comment
 (
     id         VARCHAR(36) PRIMARY KEY,
@@ -114,4 +105,13 @@ CREATE TABLE comment
     text       TEXT,
 
     CONSTRAINT fk_comment_creator FOREIGN KEY (creator_id) REFERENCES users (id)
+);
+
+CREATE TABLE post_hashtags
+(
+    post_id   VARCHAR(36) NOT NULL,
+    hashtag VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (post_id, hashtag),
+    CONSTRAINT fk_post_hashtag_post FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE
 );

@@ -3,10 +3,12 @@ package com.sn.snuser.repository.specification.post;
 import com.sn.snuser.model.Post;
 import com.sn.snuser.repository.specification.SpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class PostCreatedDateBetweenSpecification implements SpecificationProvider<Post> {
     private static final String FILTER_KEY = "createdAtBetween";
     private static final String FIELD_NAME = "createdAt";

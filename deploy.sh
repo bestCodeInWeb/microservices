@@ -15,9 +15,13 @@ docker build -t sn-keycloak:latest -f ./sn-keycloak-rabbitmq-provider/Dockerfile
 echo "📦 Збірка образу sn-user:latest..."
 docker build -t sn-user:latest -f Dockerfile-sn-user .
 
+# 4. Збираємо образ sn-media (НОВИЙ КРОК)
+echo "📦 Збірка образу sn-media:latest..."
+docker build -t sn-media:latest ./sn-media
+
 echo "✅ Збірка образів завершена!"
 
-# 4. Застосовуємо всі .yml конфігурації з папки k8s/
+# 5. Застосовуємо всі .yml конфігурації з папки k8s/
 echo "🚀 Розгортання сервісів у Kubernetes..."
 kubectl apply -f k8s/
 

@@ -51,7 +51,7 @@ public class User {
     @Embedded
     private ProfileSettings profileSettings;
 
-    private String avatar; //todo move to profile entity + bio
+    private String avatar; // Тепер це ID з sn-media
 
-    private String background;
+    private String background; // Тепер це ID з sn-media
 }

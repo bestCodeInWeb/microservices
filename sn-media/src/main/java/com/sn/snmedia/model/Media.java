@@ -1,14 +1,14 @@
-package com.sn.snuser.model;
+package com.sn.snmedia.model;
 
-import com.sn.snuser.model.enums.MediaOwnerType;
-import com.sn.snuser.model.enums.MediaType;
+import com.sn.snmedia.model.enums.MediaOwnerType;
+import com.sn.snmedia.model.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.*;
 
-//todo remove this
 @Entity(name = "media")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -17,8 +17,14 @@ public class Media {
     @EqualsAndHashCode.Include
     private String id;
 
+    @Column(name = "file_path", nullable = false)
+    private String filePath; // Фізичний шлях до файлу
+
     @Column(name = "uri", nullable = false)
-    private String uri;
+    private String uri; // Логічний URI (/media/download/...)
+
+    @Column(name = "mime_type")
+    private String mimeType;
 
     @Enumerated(EnumType.STRING)
     private MediaType type;
@@ -29,4 +35,7 @@ public class Media {
 
     @Column(name = "owner_id", nullable = false)
     private String ownerId;
+
+    @Column(name = "creator_id", nullable = false)
+    private String creatorId;
 }
